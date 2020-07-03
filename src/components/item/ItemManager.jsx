@@ -5,7 +5,6 @@ import Table from '../table/Table';
 function ItemManager() {
   const [items, setItems] = useState();
   const [itemEdit, setItemEdit] = useState();
-  const someValues = null;
 
   useEffect(() => {
     async function fetchItems() {
@@ -17,10 +16,10 @@ function ItemManager() {
     fetchItems();
   }, []);
 
-  const submitValues = async (values) => {
+  const submitItem = async (item) => {
     let response = await fetch(`http://localhost:8000/api/items`, {
       method: 'post',
-      body: JSON.stringify(values),
+      body: JSON.stringify(item),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -38,8 +37,8 @@ function ItemManager() {
   };
 
   const submitEditItem = async (values) => {
-    console.log(values);
-    let response = await fetch(`http://localhost:8000/api/items/${values.id}`, {
+    console.log(values)
+    let response = await fetch(`http://localhost:8000/api/items/${itemEdit.id}`, {
       method: 'put',
       body: JSON.stringify(values),
       headers: {
@@ -57,7 +56,10 @@ function ItemManager() {
   return (
     <div>
       <h1>Item Manager</h1>
-      <Form values={itemEdit} submitValues={submitValues}></Form>
+      <Form
+        item={itemEdit}
+        submitValues={submitItem}
+        submitEditValues={submitEditItem}></Form>
       <div className='mt-5'>
         <Table data={items} editItem={editItem} deleteItem={deleteItem}></Table>
       </div>

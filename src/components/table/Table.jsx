@@ -9,6 +9,13 @@ function Table({ data, deleteItem, editItem }) {
     });
   };
 
+  const convertType = (value) => {
+    if (typeof value !== 'boolean') {
+      return value;
+    }
+    return value ? 'Yes' : 'No';
+  };
+
   const renderTableData = () => {
     return data.map((row) => {
       // const { ...header } = row;
@@ -16,7 +23,7 @@ function Table({ data, deleteItem, editItem }) {
       return (
         <tr>
           {headers.map((header, index) => (
-            <td key={index}>{row[header]}</td>
+            <td key={index}>{convertType(row[header])}</td>
           ))}
           <td>
             <p onClick={() => deleteItem(row.id)}>Delete</p>

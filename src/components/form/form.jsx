@@ -16,24 +16,27 @@ const CheckBox = styled.input`
   margin-right: 5px;
 `;
 
-function Form({ values, submitValues }) {
-  const [name, setName] = useState(values?.name);
-  const [catalogNum, setCatalogNum] = useState(values?.catalogNum);
-  const [price, setPrice] = useState(values?.price);
-  const [hasVat, setHasVat] = useState(values?.hasVat || false);
-  const [enable, setEnable] = useState(values?.enable || false);
+function Form({ item, submitValues, submitEditValues }) {
+
+  const [name, setName] = useState(item?.name || '');
+  const [catalogNum, setCatalogNum] = useState(item?.serial || '');
+  const [price, setPrice] = useState(item?.price || '');
+  const [hasVat, setHasVat] = useState(item?.vat || false);
+  const [enable, setEnable] = useState(item?.enable || false);
 
   useEffect(() => {
-    setName(values?.name);
-    setCatalogNum(values?.catalogNum);
-    setPrice(values?.price);
-    setHasVat(values?.hasVat);
-    setEnable(values?.enable);
-  }, [values]);
+    setName(item?.name);
+    setCatalogNum(item?.serial);
+    setPrice(item?.price);
+    setHasVat(item?.vat);
+    setEnable(item?.enable);
+  }, [item]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    submitValues({ name, catalogNum, price, hasVat, enable });
+    const values = { name, catalogNum, price, hasVat, enable };
+    item ? submitEditValues(values) : submitValues(values);
   };
 
   const clearForm = () => {
@@ -44,26 +47,26 @@ function Form({ values, submitValues }) {
     <FormWrapper onSubmit={handleSubmit}>
       <InputText
         type='text'
-        value={values?.name}
+        value={name}
         placeholder='Name'
         onChange={(e) => setName(e.target.value)}
       />
       <InputText
         type='text'
-        value={values?.serial}
+        value={catalogNum}
         placeholder='Catalog No.'
         onChange={(e) => setCatalogNum(e.target.value)}
       />
       <InputText
         type='number'
-        value={values?.price}
+        value={price}
         placeholder='Price'
         onChange={(e) => setPrice(e.target.value)}
       />
       <div className='pt-2 mr-5'>
         <CheckBox
-          value={values?.vat}
-          checked={values?.vat}
+          checked={hasVat}
+          value={hasVat}
           className='form-check-input'
           type='checkbox'
           id='defaultCheck1'
@@ -76,8 +79,8 @@ function Form({ values, submitValues }) {
 
       <div className='pt-2 mr-5'>
         <CheckBox
-          checked={values?.enable}
-          value={values?.enable}
+          checked={enable}
+          value={enable}
           className='form-check-input'
           type='checkbox'
           id='defaultCheck1'
@@ -88,7 +91,7 @@ function Form({ values, submitValues }) {
         </label>
       </div>
       <button className='btn btn-primary' type='submit' value='Submit'>
-        {values ? 'Update': 'Add'}
+        {item ? 'Update' : 'Add'}
       </button>
     </FormWrapper>
   );
