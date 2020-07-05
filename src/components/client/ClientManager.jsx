@@ -1,31 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import Form from '../form/form';
+import ClientForm from '../form/ClientForm';
 import Table from '../table/Table';
 
-function ClientManager() {
-  const [clients, setClients] = useState();
-  const someValues = {};
-  // const clientColumns = ['name', 'catalog-num', 'price', 'has-vat', 'enable']
+function ClientManager({
+  diversities,
+  clientList,
+  deleteItem,
+  submitItem,
+  submitEditItem,
+}) {
+  const [clients, setClients] = useState(clientList);
+  const [clientEdit, setClientEdit] = useState();
+  useEffect(() => {
+    setClients(clientList);
+  }, [clientList]);
 
   useEffect(() => {
-    async function fetchClients() {
-      let response = await fetch(`http://localhost:8000/api/clients`);
-      const data = await response.json();
-      setClients(data);
-    }
-    fetchClients();
-  }, []);
+    setClientEdit(clientEdit);
+  }, [clientEdit]);
 
-  const submitValues = (values) => {
-    console.log(values);
+  const itemDelete = (id) => {
+    deleteItem('clients', id);
+  };
+
+  const itemSubmit = (client) => {
+    submitItem('clients', client);
+  };
+
+  const itemEditSubmit = (client) => {
+    submitEditItem('clients', client);
   };
 
   return (
     <div>
       <h1>Client Manager</h1>
-      <Form values={someValues} submitValues={submitValues}></Form>
+      <ClientForm
+        client={clientEdit}
+        submitItem={itemSubmit}
+        submitEditItem={itemEditSubmit}
+        diversities={diversities}></ClientForm>
       <div className='mt-5'>
-        <Table data={clients}></Table>
+        <Table
+          data={clients}
+          editItem={(values) => setClientEdit(values)}
+          deleteItem={itemDelete}></Table>
       </div>
     </div>
   );

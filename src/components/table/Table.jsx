@@ -10,21 +10,20 @@ function Table({ data, deleteItem, editItem }) {
   };
 
   const convertType = (value) => {
-    if (typeof value !== 'boolean') {
-      return value;
+    if (Array.isArray(value)) {
+      return value.map((arr) => arr.label).toString();
     }
+    if (typeof value !== 'boolean') return value;
     return value ? 'Yes' : 'No';
   };
 
   const renderTableData = () => {
-    return data.map((row) => {
-      // const { ...header } = row;
-
+    return data.map((row, index) => {
       return (
-        <tr>
-          {headers.map((header, index) => (
-            <td key={index}>{convertType(row[header])}</td>
-          ))}
+        <tr key={index}>
+          {headers.map((header, index) => {
+            return <td key={index}>{convertType(row[header])}</td>;
+          })}
           <td>
             <p onClick={() => deleteItem(row.id)}>Delete</p>
             <p onClick={() => editItem(row)}>Edit</p>

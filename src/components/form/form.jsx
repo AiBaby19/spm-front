@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import DiversitySelector from '../diversity/DiversitySelector';
 
 const FormWrapper = styled.form`
   display: flex;
-  width: 1000px;
+  width: auto;
 `;
 
 const InputText = styled.input`
@@ -16,31 +17,26 @@ const CheckBox = styled.input`
   margin-right: 5px;
 `;
 
-function Form({ item, submitValues, submitEditValues }) {
-
-  const [name, setName] = useState(item?.name || '');
-  const [catalogNum, setCatalogNum] = useState(item?.serial || '');
-  const [price, setPrice] = useState(item?.price || '');
-  const [hasVat, setHasVat] = useState(item?.vat || false);
-  const [enable, setEnable] = useState(item?.enable || false);
+function Form({ diversities, item, submitValues, submitEditValues }) {
+  const [name, setName] = useState('');
+  const [catalogNum, setCatalogNum] = useState('');
+  const [price, setPrice] = useState('');
+  const [hasVat, setHasVat] = useState(false);
+  const [enable, setEnable] = useState(false);
+  const [diversity, setDiversity] = useState('');
 
   useEffect(() => {
-    setName(item?.name);
-    setCatalogNum(item?.serial);
-    setPrice(item?.price);
-    setHasVat(item?.vat);
-    setEnable(item?.enable);
+    setName(item?.name || '');
+    setCatalogNum(item?.serial || '');
+    setPrice(item?.price || '');
+    setHasVat(item?.vat || false);
+    setEnable(item?.enable || false);
   }, [item]);
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const values = { name, catalogNum, price, hasVat, enable };
+    const values = { name, catalogNum, price, hasVat, enable, diversity };
     item ? submitEditValues(values) : submitValues(values);
-  };
-
-  const clearForm = () => {
-    // setName
   };
 
   return (
@@ -77,7 +73,7 @@ function Form({ item, submitValues, submitEditValues }) {
         </label>
       </div>
 
-      <div className='pt-2 mr-5'>
+      <div className='pt-2 mr-4'>
         <CheckBox
           checked={enable}
           value={enable}
@@ -89,6 +85,16 @@ function Form({ item, submitValues, submitEditValues }) {
         <label className='form-check-label' htmlFor='defaultCheck1'>
           Enabled
         </label>
+      </div>
+
+      <div className='d-flex mr-2'>
+        {diversities && (
+          <DiversitySelector
+            diversities={diversities}
+            diversity={diversity}
+            setDiversity={setDiversity}
+          />
+        )}
       </div>
       <button className='btn btn-primary' type='submit' value='Submit'>
         {item ? 'Update' : 'Add'}

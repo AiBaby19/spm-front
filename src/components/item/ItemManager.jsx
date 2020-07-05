@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Form from '../form/form';
+import Form from '../form/Form';
 import Table from '../table/Table';
 
-function ItemManager() {
+function ItemManager({diversities}) {
   const [items, setItems] = useState();
   const [itemEdit, setItemEdit] = useState();
 
@@ -10,7 +10,6 @@ function ItemManager() {
     async function fetchItems() {
       let response = await fetch(`http://localhost:8000/api/items`);
       const data = await response.json();
-
       setItems(data.data);
     }
     fetchItems();
@@ -37,14 +36,16 @@ function ItemManager() {
   };
 
   const submitEditItem = async (values) => {
-    console.log(values)
-    let response = await fetch(`http://localhost:8000/api/items/${itemEdit.id}`, {
-      method: 'put',
-      body: JSON.stringify(values),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    let response = await fetch(
+      `http://localhost:8000/api/items/${itemEdit.id}`,
+      {
+        method: 'put',
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     const data = await response.json();
     setItems(data.data);
   };
@@ -59,7 +60,9 @@ function ItemManager() {
       <Form
         item={itemEdit}
         submitValues={submitItem}
-        submitEditValues={submitEditItem}></Form>
+        submitEditValues={submitEditItem}
+        diversities={diversities}
+        ></Form>
       <div className='mt-5'>
         <Table data={items} editItem={editItem} deleteItem={deleteItem}></Table>
       </div>
